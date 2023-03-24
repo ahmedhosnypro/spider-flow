@@ -1,0 +1,57 @@
+<div class="layui-tab layui-tab-fixed layui-tab-brief">
+  <ul class="layui-tab-title">
+    <li class="layui-this">Configuration</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+    	<form class="layui-form editor-form-node">
+			<div class="layui-row">
+				<div class="layui-col-md4">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Node name</label>
+						<div class="layui-input-block">
+							<input type="text" name="value" placeholder="Please enter the node name" value="{{=d.value}}" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md4">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Number or collection</label>
+						<div class="layui-input-block" codemirror="loopCount" placeholder="Please enter the number of cycles or sets" data-value="{{=d.data.object.loopCount}}"></div>
+					</div>
+				</div>
+				<div class="layui-col-md4">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Cycle variable</label>
+						<div class="layui-input-block">
+							<input type="text" name="loopItem" placeholder="Please enter the cycle variable (default item)" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.loopItem}}">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-row">
+				<div class="layui-col-md4">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Settlement variable</label>
+						<div class="layui-input-block">
+							<input type="text" name="loopVariableName" placeholder="Please enter the bidding variable" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.loopVariableName}}">
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md4">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Start position</label>
+						<div class="layui-input-block" codemirror="loopStart" placeholder="Please enter the number of cycles" data-value="{{=d.data.object.loopStart || '0'}}"></div>
+					</div>
+				</div>
+				<div class="layui-col-md4">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Ending position</label>
+						<div class="layui-input-block" codemirror="loopEnd" placeholder="Please enter the number of cycles" data-value="{{=d.data.object.loopEnd || -1}}"></div>
+					</div>
+				</div>
+			</div>
+    	</form>
+    </div>
+  </div>
+</div>

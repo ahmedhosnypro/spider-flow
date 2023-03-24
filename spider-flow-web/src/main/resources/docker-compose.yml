@@ -1,0 +1,22 @@
+services:
+  db:
+    container_name: spidrflow
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456789
+      MYSQL_DATA: /data/
+      MYSQL_DATABASE: spiderflow
+    volumes:
+      - db:/data/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - db
+    restart: unless-stopped
+
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:

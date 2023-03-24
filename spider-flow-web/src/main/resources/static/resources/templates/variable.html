@@ -1,0 +1,75 @@
+<div class="layui-tab layui-tab-fixed layui-tab-brief">
+  <ul class="layui-tab-title">
+    <li class="layui-this">Configuration</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+    	<form class="layui-form editor-form-node">
+			<div class="layui-row">
+				<div class="layui-col-md4">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Node name</label>
+						<div class="layui-input-block">
+							<input type="text" name="value" placeholder="Please enter the node name" value="{{=d.value}}" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md4">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Cycle variable</label>
+						<div class="layui-input-block">
+							<input type="text" name="loopVariableName" placeholder="Please enter the loop variable" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.loopVariableName}}">
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md4">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Cycles</label>
+						<div class="layui-input-block" codemirror="loopCount" placeholder="Please enter the number of cycles" data-value="{{=d.data.object.loopCount}}"></div>
+					</div>
+				</div>
+			</div>
+			<table class="layui-table" id="spider-variable" data-cell="{{=d.cell.id}}" data-keys="variable-name,variable-value,variable-description"></table>
+    		<div class="layui-form-item">
+    			<div class="layui-input-inline">
+	    			<button class="layui-btn table-row-add" type="button" for="spider-variable">Add a variable</button>
+	    		</div>
+	    	</div>
+    	</form>
+    </div>
+  </div>
+</div>
+
+<script>
+	$(function(){
+		function renderSpiderVariable(data){
+			layui.table.render({
+				elem : '#spider-variable',
+				limit: 50,
+				cols : [[{
+					title : 'variable name',
+					width : 150,
+					templet : '#variable-name-tmpl'
+				},{
+					title : 'variable',
+					minWidth : 400,
+					templet : '#variable-value-tmpl'
+				},{
+					title : 'describe',
+					width : 250,
+					templet : '#variable-description-tmpl'
+				},{
+					title : 'operate',
+					width : 120,
+					align : 'center',
+					templet : '#common-operation'
+				}]],
+				data : data,
+				text : {
+					none : 'No variable yet'
+				}
+			})
+		}
+		renderSpiderVariable(getCellData({{d.cell.id}},$("#spider-variable").data('keys').split(",")));
+	});
+</script>

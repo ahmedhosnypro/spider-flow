@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>DataSource</title>
+	<link rel="stylesheet" href="js/layui/css/layui.css" />
+	<link rel="stylesheet" href="css/layui-blue.css" />
+	<script type="text/javascript" src="js/layui/layui.all.js" ></script>
+</head>
+<body style="padding:5px;">
+<a class="layui-btn layui-btn-sm layui-btn-normal" href="datasource-edit.html"><i class="layui-icon">&#xe654;</i> Add data source</a>
+<hr>
+<table class="layui-table" id="table" lay-filter="table"></table>
+<script>
+	var $ = layui.$;
+	var $table = layui.table.render({
+		id : 'table',
+		elem : '#table',
+		url : 'datasource/list',
+		page : true,
+		parseData : function(resp){
+			return {
+				code : 0,
+				data : resp.records,
+				count : resp.total
+			}
+		},
+		cols : [[{
+			title : 'serial number',
+			width : 60,
+			type : 'numbers',
+			align : 'center'
+		},{
+			title : 'data source name',
+			field : 'name'
+		},{
+			title : 'drive',
+			field : 'driverClassName',
+		},{
+			title : 'creation time',
+			width : 160,
+			field : 'createDate',
+			align : 'center'
+		},{
+			title : 'operate',
+			width : 120,
+			align : 'center',
+			templet : '#buttons'
+		}]]
+	})
+	$("body").on('click','.btn-remove',function(){
+		var id = $(this).data('id');
+		layui.layer.confirm('Are you sure you want to delete this data source？',{
+			title : '删除'
+		},function(index){
+			$table.reload();
+			$.ajax({
+				url : 'datasource/remove',
+				data : {
+					id : id
+				},
+				success : function(){
+					layui.layer.msg('successfully deleted',{time : 500},function(){
+						$table.reload();
+					})
+				},
+				error : function(){
+					layui.layer.msg('failed to delete')
+				}
+			})
+			layui.layer.close(index);
+		})
+	}).on('click','.btn-edit',function(){
+		location.href = 'datasource-edit.html?id=' + $(this).data('id');
+	})
+</script>
+<script type="text/html" id="buttons">
+	<a class="layui-btn layui-btn-sm btn-edit" data-id="{{d.id}}">edit</a>
+	<a class="layui-btn layui-btn-sm btn-remove" data-id="{{d.id}}">delete</a>
+</script>
+</body>
+</html>

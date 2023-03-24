@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>SpiderFlow</title>
+	<link rel="stylesheet" href="js/layui/css/layui.css" />
+	<link rel="stylesheet" href="css/layui-blue.css" />
+	<script type="text/javascript" src="js/layui/layui.all.js" ></script>
+</head>
+<body style="padding:5px;">
+<div class="layui-form-item">
+	<label class="layui-form-label">crawler name</label>
+	<div class="layui-input-inline">
+		<input type="text" name="name" required  lay-verify="required" placeholder="Please enter the crawler name" autocomplete="off" class="layui-input">
+	</div>
+	<div class="layui-input-inline" style="margin-top:5px">
+		<a class="layui-btn layui-btn-sm layui-btn-normal btn-search"><i class="layui-icon">&#xe615;</i> search</a>
+		<a class="layui-btn layui-btn-sm layui-btn-normal" href="editor.html"><i class="layui-icon">&#xe654;</i> add crawler</a>
+	</div>
+</div>
+
+<hr>
+<table class="layui-table" id="table" lay-filter="table"></table>
+<script>
+	var $ = layui.$;
+	var $table = layui.table.render({
+		id : 'table',
+		elem : '#table',
+		url : 'spider/list',
+		method : 'post',
+		page : true,
+		parseData : function(resp){
+			return {
+				code : 0,
+				data : resp.records,
+				count : resp.total
+			}
+		},
+		cols : [[{
+			title : 'serial number',
+			width : 35,
+			type : 'numbers',
+			align : 'center'
+		},{
+			title : 'crawler name',
+			field : 'name',
+			templet : function(row){
+				return '<a class="layui-btn layui-btn-sm btn-details" data-name="'+row.name+'" data-id="'+row.id+'">'+row.name+'</a>';
+			}
+		},{
+			title : 'cron',
+			field : 'cron',
+			width : 80,
+			templet : function(row){
+				return '<a class="layui-btn layui-btn-sm btn-edit-cron" data-id="'+row.id+'" data-cron="'+row.cron+'">'+(row.cron || 'edit cron')+'</a>';
+			}
+		},{
+			title : 'Timed task',
+			field : 'enabled',
+			width : 105,
+			templet : function(row){
+				return '<input type="checkbox" data-cron="'+(row.cron||'')+'" name="switch" lay-skin="switch" lay-text="Timing|Long task" value="'+row.id+'" '+(row.enabled == 1 ? 'checked':'')+'>';
+			}
+		},{
+			title : 'creation time',
+			width : 160,
+			field : 'createDate',
+			align : 'center'
+		},{
+			title : 'last execution time',
+			width : 160,
+			field : 'lastExecuteTime',
+			align : 'center'
+		},{
+			title : 'running completed',
+			width : 120,
+			field : 'executeCount',
+			align : 'center',
+			templet : '#execute-count'
+		},{
+			title : 'next execution time',
+			width : 160,
+			field : 'nextExecuteTime',
+			align : 'center'
+		},{
+			title : 'operate',
+			width : 250,
+			align : 'center',
+			templet : '#buttons'
+		}]]
+	})
+	layui.form.on('switch',function(e){
+		if(e.elem.checked && !$(e.elem).data('cron')){
+			layui.layer.msg('cron expression cannot be empty！');
+			e.elem.checked = false;
+			layui.form.render();
+			return;
+		}
+		$.ajax({
+			url : 'spider/' + (e.elem.checked ? 'start': 'stop'),
+			data : {
+				id : e.value
+			},
+			success : function(){
+				layui.layer.msg((e.elem.checked ? 'Switch to scheduled task': 'switch to long task') + 'success');
+			},
+			error : function(){
+				layui.layer.msg((e.elem.checked ? 'Switch to scheduled task': 'switch to long task') + 'success');
+			}
+		})
+	})
+	function reloadTable(){
+		$table.reload({
+			where : {
+				name : $('input[name=name]').val()
+			},
+			page : {
+				curr : 1
+			}
+		})
+	}
+	$("body").on('click','.btn-search',function(){
+		reloadTable();
+	}).on('click','.btn-copy',function(){
+		var id = $(this).data('id');
+		layui.layer.confirm('Are you sure you want to copy this crawler？',{
+			title : '复制'
+		},function(index){
+			$table.reload();
+			$.ajax({
+				url : 'spider/copy',
+				data : {
+					id : id
+				},
+				success : function(){
+					layui.layer.msg('copy successfully',{time : 500},function(){
+						$table.reload();
+					})
+				},
+				error : function(){
+					layui.layer.msg('replication failed')
+				}
+			})
+			layui.layer.close(index);
+		})
+	}).on('click','.btn-remove',function(){
+		var id = $(this).data('id');
+		layui.layer.confirm('Are you sure you want to delete this crawler？',{
+			title : 'delete'
+		},function(index){
+			$table.reload();
+			$.ajax({
+				url : 'spider/remove',
+				data : {
+					id : id
+				},
+				success : function(){
+					layui.layer.msg('successfully deleted',{time : 500},function(){
+						$table.reload();
+					})
+				},
+				error : function(){
+					layui.layer.msg('failed to delete')
+				}
+			})
+			layui.layer.close(index);
+		})
+	}).on('click','.btn-run',function(){
+		var id = $(this).data('id');
+		layui.layer.confirm('Are you sure you want to manually run the crawler once？',{
+			title : 'run task'
+		},function(index){
+			$table.reload();
+			$.ajax({
+				url : 'spider/run',
+				data : {
+					id : id
+				},
+				success : function(){
+					layui.layer.msg('Manually running successfully, running in the background',{time : 500},function(){
+						$table.reload();
+					})
+				},
+				error : function(){
+					layui.layer.msg('Failed to run manually')
+				}
+			})
+			layui.layer.close(index);
+		})
+	}).on('click','.btn-task',function(){
+		parent.openTab($(this).data('name') + '-task details',$(this).data('id') + '-task','task.html?id=' + $(this).data('id') + '&name=' + encodeURIComponent(encodeURIComponent($(this).data('name'))));
+	}).on('click','.btn-log',function(){
+		parent.openTab($(this).data('name') + '- log',$(this).data('id') + '-log','log.html?id=' + $(this).data('id'));
+	}).on('click','.btn-edit-cron',function(){
+		var id = $(this).data('id');
+		var value = $(this).data('cron') || '';
+		parent.$table = $table;
+		parent.layer.open({
+			type: 2,
+			area: ['850px', '660px'],
+			fixed: false, //not fixed
+			maxmin: true,
+			content: 'editCron.html?id=' + id + '&cron=' + value
+		});
+	}).on('click','.btn-details',function () {
+		parent.openTab($(this).data('name') +'-编辑',$(this).data('id') + '-edit','editor.html?id='+$(this).data('id'));
+	}).on('click','.btn-notice',function () {
+		var id = $(this).data('id');
+		parent.$table = $table;
+		parent.layer.open({
+			type: 2,
+			area: ['700px', '400px'],
+			fixed: false, //not fixed
+			maxmin: true,
+			content: 'spiderList-notice.html?id=' + id
+		});
+	})
+</script>
+<script type="text/html" id="execute-count">
+	<a class="layui-btn layui-btn-sm btn-task" data-name="{{d.name}}" data-id="{{d.id}}">{{d.running || 0}}/{{d.executeCount || 0}}</a>
+</script>
+<script type="text/html" id="buttons">
+	<a class="layui-btn layui-btn-sm btn-details" data-id="{{d.id}}" data-name="{{d.name}}" title="Check"><i class="layui-icon">&#xe615;</i></a>
+	<a class="layui-btn layui-btn-sm btn-notice" data-id="{{d.id}}" title="notification settings"><i class="layui-icon">&#xe667;</i></a>
+	<a class="layui-btn layui-btn-sm btn-run" data-id="{{d.id}}" title="run manually"><i class="layui-icon">&#xe623;</i></a>
+	<a class="layui-btn layui-btn-sm btn-log" data-name="{{d.name}}" data-id="{{d.id}}" title="log"><i class="layui-icon">&#xe60e;</i></a>
+	<a class="layui-btn layui-btn-sm btn-remove" data-id="{{d.id}}" title="delete"><i class="layui-icon">&#xe640;</i></a>
+</script>
+</body>
+</html>

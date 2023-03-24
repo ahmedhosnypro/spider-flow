@@ -1,0 +1,133 @@
+<div class="layui-tab layui-tab-fixed layui-tab-brief">
+  <ul class="layui-tab-title">
+    <li class="layui-this">Configuration</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+    	<form class="layui-form editor-form-node">
+			<div class="layui-row">
+				<div class="layui-col-md3">
+					<div class="layui-form-item">
+						<label class="layui-form-label">节点名称</label>
+						<div class="layui-input-block">
+							<input type="text" name="value" placeholder="Please enter the node name" value="{{=d.value}}" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md3">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Cycle variable</label>
+						<div class="layui-input-block">
+							<input type="text" name="loopVariableName" placeholder="Please enter the loop variable" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.loopVariableName}}">
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md3">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Cycles</label>
+						<div class="layui-input-block" codemirror="loopCount" placeholder="Please enter the number of cycles" data-value="{{=d.data.object.loopCount}}"></div>
+					</div>
+				</div>
+				<div class="layui-col-md3">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Output settings</label>
+						<div class="layui-input-block">
+							<input type="checkbox" title="Output all parameters" value="output-all" lay-skin="primary" {{d.data.object['output-all'] == '1' ? 'checked' : ''}}/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-row layui-col-space20">
+				<div class="layui-col-md3">
+					<div class="layui-form-item">
+						<label class="layui-form-label">Data output</label>
+						<div class="layui-input-block">
+							<input type="checkbox" target-div="databaseDiv" title="Output to the database" value="output-database" lay-skin="primary" {{d.data.object['output-database'] == '1' ? 'checked' : ''}} lay-filter="targetCheck"/>
+							<input type="checkbox" class="oCheckbox" target-div="csvDiv" title="Output to CSV file" value="output-csv" lay-skin="primary" {{d.data.object['output-csv'] == '1' ? 'checked' : ''}} lay-filter="targetCheck"/>
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md3 databaseDiv" {{d.data.object['output-database'] == '1' ? '' : 'style="display: none;"'}}>
+					<div class="layui-form-item">
+						<label class="layui-form-label">data source</label>
+						<div class="layui-input-block">
+							<select name="datasourceId">
+								{{# layui.each(d.datasources,function(index,datasource){ }}
+								<option value="{{=datasource.id}}" {{datasource.id == d.data.object.datasourceId ? 'selected': ''}}>{{datasource.name}}</option>
+								{{# }) }}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md2 databaseDiv" {{d.data.object['output-database'] == '1' ? '' : 'style="display: none;"'}}>
+					<div class="layui-form-item">
+						<input type="text" name="tableName" placeholder="Please enter the table name" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.tableName}}">
+					</div>
+				</div>
+				<div class="layui-col-md2 csvDiv" {{d.data.object['output-csv'] == '1' ? '' : 'style="display: none;"'}}>
+					<div class="layui-form-item">
+						<input type="text" name="csvName" placeholder="Please enter the file name" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.csvName}}">
+					</div>
+				</div>
+				<div class="layui-col-md2 csvDiv" {{d.data.object['output-csv'] == '1' ? '' : 'style="display: none;"'}}>
+					<div class="layui-form-item">
+						<select name="csvEncoding">
+							<option value="GBK" {{d.data.object['csvEncoding'] == 'GBK' ? 'selected': ''}}>GBK</option>
+							<option value="UTF-8" {{d.data.object['csvEncoding'] == 'UTF-8' ? 'selected': ''}}>UTF-8</option>
+							<option value="UTF-8BOM" {{d.data.object['csvEncoding'] == 'UTF-8BOM' ? 'selected': ''}}>UTF-8 BOM</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<table class="layui-table" id="spider-output" data-cell="{{=d.cell.id}}" data-keys="output-name,output-value"></table>
+    		<hr>
+    		<div class="layui-form-item">
+    			<div class="layui-input-inline">
+	    			<button class="layui-btn table-row-add" type="button" for="spider-output">Add an output item</button>
+	    		</div>
+	    	</div>
+    	</form>
+    </div>
+  </div>
+</div>
+<script>
+	function renderSpiderOutput(data){
+		layui.table.render({
+			elem : '#spider-output',
+			limit: 50,
+			cols : [[{
+				title : 'Output',
+				width : 150,
+				templet : '#output-name-tmpl'
+			},{
+				title : 'output value',
+				templet : '#output-value-tmpl'
+			},{
+				title : 'operate',
+				width : 120,
+				align : 'center',
+				templet : '#common-operation'
+			}]],
+			data : data,
+			text : {
+				none : 'No output items are not set yet'
+			}
+		})
+	}
+	renderSpiderOutput(getCellData({{d.cell.id}},$("#spider-output").data('keys').split(",")));
+
+	$.ajax({
+		url : 'datasource/all',
+		success : function(datasources){
+			for(var i =0;i<datasources.length;i++){
+				var ds = datasources[i];
+				$('select[name=datasourceId]').append('<option value="'+ds.id+'">'+ds.name+'</option>');
+			}
+			layui.form.render();
+			var selectDataSourceId = '{{=d.data.object.datasourceId}}';
+			if(selectDataSourceId != ''){
+				$('.layui-form-select dd[lay-value='+selectDataSourceId+']').trigger('click');
+			}
+		}
+	});
+</script>

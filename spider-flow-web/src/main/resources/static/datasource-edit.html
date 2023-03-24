@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>DataSource</title>
+	<link rel="stylesheet" href="js/layui/css/layui.css" />
+	<link rel="stylesheet" href="css/layui-blue.css" />
+	<script type="text/javascript" src="js/layui/layui.all.js" ></script>
+	<script type="text/javascript" src="js/common.js" ></script>
+	<style type="text/css">
+		html,body{
+			width:100%;
+		}
+		.layui-form{
+			width : 700px;
+			margin-top:10px;
+		}
+		.layui-form-label{
+			width : 140px;
+		}
+		.layui-input-block{
+			margin-left : 170px;
+		}
+		.btns-submit{
+			text-align : center;
+		}
+	</style>
+</head>
+<body>
+	<form class="layui-form" autocomplete="off" lay-filter="form">
+		<div class="layui-form-item">
+   			<label class="layui-form-label">data source name</label>
+   			<div class="layui-input-block">
+   				<input type="text" name="name" placeholder="Please enter the data source name" autocomplete="off" class="layui-input" lay-verify="required"/>
+   			</div>
+   		</div>
+		<div class="layui-form-item">
+   			<label class="layui-form-label">DriverClassName</label>
+   			<div class="layui-input-block">
+   				<input type="text" name="driverClassName" placeholder="Please enter driverClassName" autocomplete="off" class="layui-input" lay-verify="required"/>
+   			</div>
+   		</div>
+		<div class="layui-form-item">
+   			<label class="layui-form-label">Database Connectivity</label>
+   			<div class="layui-input-block">
+   				<input type="text" name="jdbcUrl" placeholder="Please enter the database connection" autocomplete="off" class="layui-input"  lay-verify="required"/>
+   			</div>
+   		</div>
+   		<div class="layui-form-item">
+   			<label class="layui-form-label">username</label>
+   			<div class="layui-input-block">
+   				<input type="text" name="username" placeholder="please enter user name" autocomplete="off" class="layui-input" />
+   			</div>
+   		</div>
+   		<div class="layui-form-item">
+   			<label class="layui-form-label">password</label>
+   			<div class="layui-input-block">
+   				<input type="password" name="password" placeholder="please enter password" autocomplete="off" class="layui-input" lay-verify="required"/>
+   			</div>
+   		</div>
+   		<div class="btns-submit">
+			<button class="layui-btn layui-btn-normal" lay-submit lay-filter="save">save</button>
+			<button class="layui-btn layui-btn-normal" lay-submit lay-filter="test" type="button">test connection</button>
+			<button class="layui-btn layui-btn-primary btn-return" type="button" onclick="history.go(-1);">return</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		var $ = layui.$;
+		var dsId = getQueryString('id');
+		if(dsId){
+			$.ajax({
+				url : 'datasource/get',
+				data : {
+					id : dsId
+				},
+				success : function(data) {
+					layui.form.val('form', data);
+				}
+			});
+		}
+		layui.form.on('submit(save)',function(){
+			$.ajax({
+				url : 'datasource/save',
+				type : 'post',
+				data : {
+					id : dsId,
+					name : $("input[name=name]").val(),
+					driverClassName : $("input[name=driverClassName]").val(),
+					jdbcUrl : $("input[name=jdbcUrl]").val(),
+					username : $("input[name=username]").val(),
+					password : $("input[name=password]").val()
+				},
+				success : function(json){
+					layui.layer.msg('Saved successfully',{
+						time : 800
+					},function(){
+						location.href = 'datasources.html';
+					})
+				},
+				error : function(){
+					layui.layer.msg('Request failed');
+				}
+			})
+			return false;
+		})
+		layui.form.on('submit(test)', function () {
+			sf.ajax({
+				url : 'datasource/test',
+				type : 'post',
+				data : {
+					driverClassName : $("input[name=driverClassName]").val(),
+					jdbcUrl : $("input[name=jdbcUrl]").val(),
+					username : $("input[name=username]").val(),
+					password : $("input[name=password]").val()
+				},
+				success : function(json){
+					layui.layer.msg(json.message);
+				},
+				error : function(){
+					layui.layer.msg('Request failed');
+				}
+			});
+			return false;
+		})
+	</script>
+</body>
+</html>

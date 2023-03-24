@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Process notification settings</title>
+	<link rel="stylesheet" href="js/layui/css/layui.css" />
+	<script type="text/javascript" src="js/layui/layui.all.js"></script>
+</head>
+
+<body style="padding: 10px;">
+	<div>
+		<form class="layui-form" action="" lay-filter="flowNotice" id="formFlowNotice">
+			<input type="hidden" name="id" />
+			<div class="layui-form-item">
+				<label class="layui-form-label">recipient</label>
+				<div class="layui-input-block">
+					<textarea name="recipients" placeholder="请输入收件人" class="layui-textarea"></textarea>
+				</div>
+				<div class="layui-form-mid layui-word-aux">
+					<p>Recipients, use multiple recipients "," separated, each recipient can add separate notification marks. If not added notification marks, use the default configuration notification method</p>
+					<p>Example: SMS: 13012345678, Email: 12345678@qq.com, 13012345670</p>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">method to informe</label>
+				<div class="layui-input-block">
+					<select name="noticeWay" id="noticeWay"></select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">Notification type</label>
+				<div class="layui-input-block">
+					<input type="checkbox" lay-skin="primary" name="startNotice" title="流程开始" />
+					<input type="checkbox" lay-skin="primary" name="exceptionNotice" title="流程异常" />
+					<input type="checkbox" lay-skin="primary" name="endNotice" title="流程结束" />
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button type="button" class="layui-btn" id="save">keep</button>
+					<button type="button" class="layui-btn layui-btn-primary" id="cancel">Cancel</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript">
+		var $ = layui.$;
+		var index = parent.layer.getFrameIndex(window.name); //Get window index
+		var id = getURLParameter("id");
+
+		function getURLParameter(name) {
+			var query = decodeURI(window.location.search.substring(1));
+			var vars = query.split("&");
+			for (var i = 0; i < vars.length; i++) {
+				var pair = vars[i].split("=");
+				if (pair[0] === name) {
+					return pair[1];
+				}
+			}
+			return "";
+		}
+
+		function getNoticeWay(successFun) {
+			$.ajax({
+				url: '/flowNotice/getNoticeWay',
+				success: successFun,
+				error: function () {
+					parent.layer.msg('The type of notification method failed');
+				}
+			});
+		}
+
+		function getNoticeDetail(successFun) {
+			$.ajax({
+				url: '/flowNotice/find',
+				data: {
+					id: id
+				},
+				success: successFun,
+				error: function () {
+					parent.layer.msg('Details of obtaining notice failed');
+				}
+			});
+		}
+
+		var form = layui.form;
+
+		getNoticeWay(function (result) {
+			var data = result.data;
+			var $noticeWay = $("#noticeWay");
+			for (var key in data) {
+				$noticeWay.append($("<option value='" + key + "'>" + data[key] + "</option>"))
+			}
+			getNoticeDetail(function (resultDetail) {
+				var data = resultDetail.data;
+				data.startNotice = data.startNotice === "1" ? true : false;
+				data.exceptionNotice = data.exceptionNotice === "1" ? true : false;
+				data.endNotice = data.endNotice === "1" ? true : false;
+				form.val('flowNotice', data);
+			});
+		});
+
+		//Save the button
+		$('#save').on('click', function () {
+			var data = {};
+			$("#formFlowNotice [name]").each(function () {
+				var $this = $(this);
+				var value = "";
+				switch ($this.attr("type")) {
+					case "checkbox":
+						if ($this.is(':checked')) {
+							value = 1;
+						} else {
+							value = 0;
+						}
+						break;
+					default:
+						value = $this.val();
+						break;
+				}
+				data[$this.attr("name")] = value;
+			});
+			$.ajax({
+				url: '/flowNotice/save',
+				data: data,
+				success: function (result) {
+					if (result.code === 1) {
+						parent.layer.close(index);
+					}
+					parent.layer.msg(result.message);
+				},
+				error: function () {
+					parent.layer.msg('Preservation notice details failed');
+				}
+			});
+			return false;
+		});
+
+		//Cancel button
+		$('#cancel').on('click', function () {
+			parent.layer.close(index);
+		});
+	</script>
+</body>
+
+</html>
