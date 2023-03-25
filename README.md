@@ -11,49 +11,49 @@
     <a target="_blank" href="https://shang.qq.com/wpa/qunwpa?idkey=10faa4cf9743e0aa379a72f2ad12a9e576c81462742143c8f3391b52e8c3ed8d"><img src="https://img.shields.io/badge/Join-QQGroup-blue"></a>
 </p>
 
-[介绍](#介绍) | [特性](#特性) | [插件](#插件) | <a target="_blank" href="http://demo.spiderflow.org">DEMO站点</a> | <a target="_blank" href="https://www.spiderflow.org">文档</a> | <a target="_blank" href="https://www.spiderflow.org/changelog.html">更新日志</a> | [截图](#项目部分截图) | [其它开源](#其它开源项目) | [免责声明](#免责声明)
+[introduce](#introduce) | [characteristic](#characteristic) | [Plug -in](#Plug -in) | <a target="_blank" href="http://demo.spiderflow.org">Demo site</a> | <a target="_blank" href="https://www.spiderflow.org">Documentation</a> | <a target="_blank" href="https://www.spiderflow.org/changelog.html">Update log</a> | [screenshot](#Screenshot of the project) | [Other open source](#Other open source Exempt statemExempt statementcts) | [Exempt statement](#Exempt statement)
 
-## 介绍
-平台以流程图的方式定义爬虫,是一个高度灵活可配置的爬虫平台
+## introduce
+The platform dIt is a highly flexible reptile platform by flowchart,It is a highly flexible reptile platform
 
-## 特性
-- [x] 支持Xpath/JsonPath/css选择器/正则提取/混搭提取
-- [x] 支持JSON/XML/二进制格式
-- [x] 支持多数据源、SQL select/selectInt/selectOne/insert/update/delete
-- [x] 支持爬取JS动态渲染(或ajax)的页面
-- [x] 支持代理
-- [x] 支持自动保存至数据库/文件
-- [x] 常用字符串、日期、文件、加解密等函数
-- [x] 支持插件扩展(自定义执行器，自定义方法）
-- [x] 任务监控,任务日志
-- [x] 支持HTTP接口
-- [x] 支持Cookie自动管理
-- [x] 支持自定义函数
+## characteristic
+- [x] Support XPath/JsonPath/CSS selector/Regular extraction/Mix and match
+- [x] Support JSOSecondary format/Secondary format
+- [x] Support most data sources, SQL select/selectInt/selectOne/insert/update/delete
+- [x] Support craOr ajax JS dynamic rendering(或ajax)Pages
+- [x] Support agent
+- [x] Support automatic saving to database/document
+- [x] Commonly used string, date, file, plus decryption and other functions
+- [x] SupportCustom actuator, custom method)ansion(Custom actuator, custom method)
+- [x] Mission monitoring,Mission log
+- [x] Support HTTP interface
+- [x] Support cookie automatic management
+- [x] Support custom function
 
-## 插件
-- [x] [Selenium插件](https://gitee.com/ssssssss-team/spider-flow-selenium)
-- [x] [Redis插件](https://gitee.com/ssssssss-team/spider-flow-redis)
-- [x] [OSS插件](https://gitee.com/ssssssss-team/spider-flow-oss)
-- [x] [Mongodb插件](https://gitee.com/ssssssss-team/spider-flow-mongodb)
-- [x] [IP代理池插件](https://gitee.com/ssssssss-team/spider-flow-proxypool)
-- [x] [OCR识别插件](https://gitee.com/ssssssss-team/spider-flow-ocr)
-- [x] [电子邮箱插件](https://gitee.com/ssssssss-team/spider-flow-mailbox)
+## Plug -in
+- [x] [Selenium plug -in](https://gitee.com/ssssssss-team/spider-flow-selenium)
+- [x] [Redis plug -in](https://gitee.com/ssssssss-team/spider-flow-redis)
+- [x] [OSS plugin](https://gitee.com/ssssssss-team/spider-flow-oss)
+- [x] [Mongodb plugin](https://gitee.com/ssssssss-team/spider-flow-mongodb)
+- [x] [IP proxy pool plugin](https://gitee.com/ssssssss-team/spider-flow-proxypool)
+- [x] [OCR recognition plug -in](https://gitee.com/ssssssss-team/spider-flow-ocr)
+- [x] [Email plugin](https://gitee.com/ssssssss-team/spider-flow-mailbox)
 
-## 项目部分截图
-### 爬虫列表
-![爬虫列表](https://images.gitee.com/uploads/images/2020/0412/104521_e1eb3fbb_297689.png "list.png")
-### 爬虫测试
-![爬虫测试](https://images.gitee.com/uploads/images/2020/0412/104659_b06dfbf0_297689.gif "test.gif")
+## Screenshot of the project
+### Reptile list
+![Reptile list](https://images.gitee.com/uploads/images/2020/0412/104521_e1eb3fbb_297689.png "list.png")
+### Crawler test
+![Crawler test](https://images.gitee.com/uploads/images/2020/0412/104659_b06dfbf0_297689.gif "test.gif")
 ### Debug
 ![Debug](https://images.gitee.com/uploads/images/2020/0412/104741_f9e1190e_297689.png "debug.png")
-### 日志
-![日志](https://images.gitee.com/uploads/images/2020/0412/104800_a757f569_297689.png "logo.png")
+### Log
+![Log](https://images.gitee.com/uploads/images/2020/0412/104800_a757f569_297689.png "logo.png")
 
-## 其它开源项目
-- [spider-flow-vue，spider-flow的前端](https://gitee.com/ssssssss-team/spider-flow-vue)
-- [magic-api，一个以XML为基础自动映射为HTTP接口的框架](https://gitee.com/ssssssss-team/magic-api)
+## Other open source projects
+- [spider-flow-vue，spider-Flow's front end](https://gitee.com/ssssssss-team/spider-flow-vue)
+- [magic-API, a framework based on XML as the HTTP interface](https://gitee.com/ssssssss-team/magic-api)
 - [magic-api-spring-boot-starter](https://gitee.com/ssssssss-team/magic-api-spring-boot-starter)
 
 
-## 免责声明
-请勿将`spider-flow`应用到任何可能会违反法律规定和道德约束的工作中，请友善使用`spider-flow`，遵守蜘蛛协议，不要将`spider-flow`用于任何非法用途。如您选择使用`spider-flow`即代表您遵守此协议，作者不承担任何由于您违反此协议带来任何的法律风险和损失，一切后果由您承担。
+## Exempt statement
+Please don't`spider-flow`Apply to any work that may violate legal provisions and moral constraints, please use friendly use`spider-flow`, Follow the spider agreement, don’t`spider-flow`Used for any illegal use.If you choose to use`spider-flow`That is, it means that you abide by this agreement, and the author will not bear any legal risks and losses caused by your violation of this agreement. All the consequences will be borne by you.
